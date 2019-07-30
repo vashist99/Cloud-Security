@@ -6,14 +6,11 @@ PORT = 12345
 
 s.connect((HOST,PORT))
 
-#f = open('pic2.png','rb')
-#l = f.read()
-while True:
-    s.send(b'Hello! we are connected')
-    #s.send(f.read())
-    break
+f = open('pic2.png','rb')
 
-print(s.recv(1024))
+while True:
+    s.sendfile(f,0,None)
+    break
 
 #f.close()
 s.close()
