@@ -1,0 +1,4 @@
+1) You are at a factory where you have to pack toys manually.there are infinite number of toys and you get n boxes to pack at a time. But there is a company policy which you have to follow while packing. suppose you put x toys in the first box.Now you have to place x toys in x different boxes. if x>n-1 then you can throw the remaining toys away.
+
+
+bjohn.karlos.54a@phuketthai.ru

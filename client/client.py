@@ -1,16 +1,29 @@
 import socket
+import pyAesCrypt
+#from os import stat,remove
 
+#connecting to server
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 HOST = '127.0.0.1'
-PORT = 12345
-
+PORT = 13579
 s.connect((HOST,PORT))
 
-f = open('pic2.png','rb')
+#encrypting the file:
+buffersize = 64*1024
+password = "foopassword"
+fin = open('new.png','rb')
+fout = open('enc_file.png.aes','wb') 
+pyAesCrypt.encryptStream(fin,fout,password,buffersize)
 
+
+k = password.encode('utf-8')
+s.send(k)
+print("password sent")
+
+#sending encrypted file to server
 while True:
-    s.sendfile(f,0,None)
+    s.sendfile(fout,0,None)
     break
-
-#f.close()
+print("encrypted file sent")
+#f2.close()
 s.close()
