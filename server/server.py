@@ -1,6 +1,6 @@
 import socket
 import pyAesCrypt
-from os import stat
+from os import stat,remove
 
 #listening and accepting connection
 HOST = '127.0.0.1'
@@ -22,10 +22,15 @@ f.write(data)
 f.close()
 print('encrypted file recieved')
 
-encFileSize = stat("enc_file.png").st_size
+encFileSize = stat("enc_file.png.aes").st_size
 
 f1 = open('enc_file.png.aes','rb')
 f2 = open('final.png','wb')
-pyAesCrypt.decryptStream(f1,f2,password,buffersize,encFileSize)
+try:
+    pyAesCrypt.decryptStream(f1,f2,password,buffersize,encFileSize)
+
+except:
+    print("an error occured")
+    remove("final.png")
 
 s.close()

@@ -14,7 +14,10 @@ password = "foopassword"
 fin = open('new.png','rb')
 fout = open('enc_file.png.aes','wb') 
 pyAesCrypt.encryptStream(fin,fout,password,buffersize)
+fout.close()
+fin.close()
 
+fout = open('enc_file.png.aes','rb')
 
 k = password.encode('utf-8')
 s.send(k)
