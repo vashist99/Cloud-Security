@@ -1,32 +1,36 @@
 import socket
-import pyAesCrypt
+from Crypto.PublicKey import RSA
+from Crypto.PublicKey.RSA import RSAImplementation
 #from os import stat,remove
 
 #connecting to server
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 HOST = '127.0.0.1'
-PORT = 13579
+PORT = 56378
 s.connect((HOST,PORT))
 
 #encrypting the file:
-buffersize = 64*1024
-password = "foopassword"
-fin = open('new.png','rb')
-fout = open('enc_file.png.aes','wb') 
-pyAesCrypt.encryptStream(fin,fout,password,buffersize)
-fout.close()
-fin.close()
+tup = RSA.generate(bits=2048,e=65537)
+s.send(tup.exportKey('PEM'))
 
-fout = open('enc_file.png.aes','rb')
 
-k = password.encode('utf-8')
-s.send(k)
-print("password sent")
+f = open('answers.txt','rb')
+data = f.read()
+f.close()
+#encrypting new.png
+enc_data = RSA.pubkey.pubkey.encrypt(tup,data,3)
+#print(enc_data)
 
-#sending encrypted file to server
-while True:
-    s.sendfile(fout,0,None)
-    break
-print("encrypted file sent")
-#f2.close()
+#storeD in enc_file.png
+f2 = open('enc_file.txt','wb')
+f2.write(enc_data[0])
+f2.close()
+
+f2 = open('enc_file.txt','rb')
+
+s.sendfile(f2)
+print('encrypted file sent')
+
+f2.close()
+
 s.close()
