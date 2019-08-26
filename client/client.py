@@ -1,14 +1,27 @@
 import socket
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives import serialization
 from Crypto.PublicKey import RSA
 from Crypto.PublicKey.RSA import RSAImplementation
+import cryptography
 import time
 #from os import stat,remove
 
 sum=0
 
-#generating key obj
-tup = RSA.generate(bits=2048,e=65537)
+#generating public and private key
+private_key = rsa.generate_private_key(public_exponent = 65537,key_size = 4096,backend = default_backend())
+public_key = private_key.public_key()
+pem = public_key.public_bytes(
+    encoding=serialization.Encoding.PEM,
+    format=serialization.PublicFormat.SubjectPublicKeyInfo
+)
 
+
+#def encryption()
 
 
 
@@ -23,21 +36,30 @@ for i in range(20):
     temp=0
     #timer started:
     start_time = time.time()
-    #recieving key object from server:
-    tups = s.recv(2048)
-    ts = RSA.importKey(tups)
-    print('key object recieved key object from server')
+    #recieving key and deserializing from server:
+    server_public_key = serialization.load_pem_public_key(
+        s.recv(2048),
+        backend=default_backend()
+    )
 
+    #print(server_public_key)
+    print('key recieved key object from server')
 
     #encrypting the file:
     f = open('answers.txt','rb')
     data = f.read()
     f.close()
     #encrypting new.png
-    enc_data = RSA.pubkey.pubkey.encrypt(ts,data,3)
+    enc_data = server_public_key.encrypt(
+    data,
+    padding.OAEP(
+        mgf=padding.MGF1(algorithm=hashes.SHA256()),
+        algorithm=hashes.SHA256(),
+        label=None
+    ))
     #storeD in enc_file.png
     f2 = open('enc_file.txt','wb')
-    f2.write(enc_data[0])
+    f2.write(enc_data)
     f2.close()
     print('file encrypted')
 
@@ -51,11 +73,11 @@ for i in range(20):
 
 
     #sending key obj to server:
-    s.send(tup.exportKey('PEM'))
+    s.sendall(pem)
     print('key object sent to server')
 
     #recieving acknowledgement from server:
-    ack_enc = s.recv(10000000) 
+    ack_enc = s.recv(10000) 
     ackf = open('ack_enc.txt','wb')
     ackf.write(ack_enc)
     ackf.close()
@@ -64,7 +86,13 @@ for i in range(20):
     #decrypting ack file:
     f2 = open('ack_enc.txt','rb')
     data = f2.read()
-    data2 = RSA.pubkey.pubkey.decrypt(tup,data)
+    data2 = private_key.decrypt(
+    data,
+    padding.OAEP(
+        mgf=padding.MGF1(algorithm=hashes.SHA256()),
+        algorithm=hashes.SHA256(),
+        label=None
+    ))
     f2.close()
     f = open('final.txt','wb')
     f.write(data2)

@@ -1,10 +1,27 @@
 import socket
 from Crypto.PublicKey import RSA
+import cryptography
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives import serialization
 import time
 
 
-#generating key obj
-tup = RSA.generate(bits=2048,e=65537)
+#generating public and prvate key
+private_key = rsa.generate_private_key(
+    public_exponent=65537,
+    key_size=4096,
+    backend=default_backend()
+)
+public_key = private_key.public_key()
+#public key serialization
+pem = public_key.public_bytes(
+    encoding=serialization.Encoding.PEM,
+    format=serialization.PublicFormat.SubjectPublicKeyInfo
+)
+
 
 HOST = '127.0.0.1'
 PORT = 56377
@@ -27,7 +44,7 @@ print('connected to client1 ')
 
 for i in range(20):
     #sending key object to client:
-    c.send(tup.exportKey('PEM'))
+    c.sendall(pem)
     print('key object sent to client')
 
     #recieving encrypted file from client
@@ -40,7 +57,13 @@ for i in range(20):
     #decrypting file from client
     f2 = open('enc_file.txt','rb')
     data = f2.read()
-    data2 = RSA.pubkey.pubkey.decrypt(tup,data)
+    data2 = private_key.decrypt(
+    data,
+    padding.OAEP(
+        mgf=padding.MGF1(algorithm=hashes.SHA256()),
+        algorithm=hashes.SHA256(),
+        label=None
+    ))
     f2.close()
     f = open('dec.txt','wb')
     f.write(data2)
@@ -48,8 +71,9 @@ for i in range(20):
     print('file from client decrypted')
 
     #recieving key object from client1:
-    tup1 = c1.recv(2048)
-    t = RSA.importKey(tup1)
+    client1_public_key = public_key = serialization.load_pem_public_key(
+        c1.recv(2048),
+        backend=default_backend())
     print('key object recieved key object from client1')
 
     #encrypting file again:
@@ -57,10 +81,16 @@ for i in range(20):
     data = f.read()
     f.close()
     #encrypting 
-    enc_data = RSA.pubkey.pubkey.encrypt(t,data,3)
+    enc_data = client1_public_key.encrypt(
+    data,
+    padding.OAEP(
+        mgf=padding.MGF1(algorithm=hashes.SHA256()),
+        algorithm=hashes.SHA256(),
+        label=None
+    ))
     #storeD in enc_file.png
     f2 = open('enc_file1.txt','wb')
-    f2.write(enc_data[0])
+    f2.write(enc_data)
     f2.close()
     print('file encrypted')
 
@@ -73,7 +103,9 @@ for i in range(20):
 
 
 
-
+    #send public key to client 1:
+    c1.sendall(pem)
+    print('public key sent to client1')
     #recieving acknowledgment file:
     ack_enc = c1.recv(100000000)
     f = open('ack_enc.txt','wb')
@@ -84,7 +116,13 @@ for i in range(20):
     #decrypting acknowledgement file:
     f2 = open('ack_enc.txt','rb')
     data = f2.read()
-    data2 = RSA.pubkey.pubkey.decrypt(t,data)
+    data2 = private_key.decrypt(
+    data,
+    padding.OAEP(
+        mgf=padding.MGF1(algorithm=hashes.SHA256()),
+        algorithm=hashes.SHA256(),
+        label=None
+    ))
     f2.close()
     f = open('ack_dec.txt','wb')
     f.write(data2)
@@ -92,8 +130,11 @@ for i in range(20):
     print('ack decrypted')
 
     #recieving key obj from client:
-    tup2 = c.recv(2048)
-    t2 = RSA.importKey(tup2)
+    client_public_key = serialization.load_pem_public_key(
+        c.recv(2048),
+        backend=default_backend()
+    )
+
     print('recieved key obj from client')
 
     #encrypting ack
@@ -101,13 +142,18 @@ for i in range(20):
     data = f.read()
     f.close()
     #encrypting 
-    enc_data = RSA.pubkey.pubkey.encrypt(t2,data,3)
+    enc_data = client_public_key.encrypt(
+        data,
+        padding.OAEP(
+        mgf=padding.MGF1(algorithm=hashes.SHA256()),
+        algorithm=hashes.SHA256(),
+        label=None
+    ))
     #storeD in enc_file.png
     f2 = open('ack.txt','wb')
-    f2.write(enc_data[0])
+    f2.write(enc_data)
     f2.close()
     print('ack file encrypted')
-
 
     #sending acknowledgement to client:
     f2 = open('ack.txt','rb')
