@@ -4,8 +4,8 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import serialization
-from Crypto.PublicKey import RSA
-from Crypto.PublicKey.RSA import RSAImplementation
+#from Crypto.PublicKey import RSA
+#from Crypto.PublicKey.RSA import RSAImplementation
 import cryptography
 import time
 #from os import stat,remove
@@ -28,7 +28,7 @@ pem = public_key.public_bytes(
 #connecting to server
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 HOST = '127.0.0.1'
-PORT = 56377
+PORT = 56376
 s.connect((HOST,PORT))
 print('connected to server')
 
@@ -42,8 +42,8 @@ for i in range(20):
         backend=default_backend()
     )
 
-    #print(server_public_key)
-    print('key recieved key object from server')
+    
+    #print('key recieved key object from server')
 
     #encrypting the file:
     f = open('answers.txt','rb')
@@ -61,12 +61,12 @@ for i in range(20):
     f2 = open('enc_file.txt','wb')
     f2.write(enc_data)
     f2.close()
-    print('file encrypted')
+    #print('file encrypted')
 
     #sending file to server:
     f2 = open('enc_file.txt','rb')
     s.sendfile(f2)
-    print('encrypted file sent')
+    #print('encrypted file sent')
     f2.close()
 
 
@@ -74,14 +74,14 @@ for i in range(20):
 
     #sending key obj to server:
     s.sendall(pem)
-    print('key object sent to server')
+    #print('key object sent to server')
 
     #recieving acknowledgement from server:
     ack_enc = s.recv(10000) 
     ackf = open('ack_enc.txt','wb')
     ackf.write(ack_enc)
     ackf.close()
-    print('encrypted ack file recieved')
+    #print('encrypted ack file recieved')
 
     #decrypting ack file:
     f2 = open('ack_enc.txt','rb')
@@ -97,7 +97,7 @@ for i in range(20):
     f = open('final.txt','wb')
     f.write(data2)
     f.close()
-    print('ack decrypted')
+    #print('ack decrypted')
     #end timer
     end_time = time.time()
     temp = (end_time-start_time)

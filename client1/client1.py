@@ -30,14 +30,14 @@ print('connected to server')
 for i in range(20):
     #sending key object to server:
     s.sendall(pem)
-    print('key object sent to server')
+    #print('key object sent to server')
 
     #recieving file from server:
     enc_data = s.recv(10000000) 
     enc_file = open('enc_file.txt','wb')
     enc_file.write(enc_data)
     enc_file.close()
-    print('encrypted file recieved')
+    #print('encrypted file recieved')
 
     #decrypting file:
     f2 = open('enc_file.txt','rb')
@@ -53,7 +53,7 @@ for i in range(20):
     f = open('final.txt','wb')
     f.write(data2)
     f.close()
-    print('file from server decrypted')
+    #print('file from server decrypted')
 
 
 
@@ -63,7 +63,7 @@ for i in range(20):
     server_public_key = serialization.load_pem_public_key(
         s.recv(2048),
         backend=default_backend())
-    print('server public_key recieved')
+    #print('server public_key recieved')
     f = open('ack.txt','rb')
     data = f.read()
     f.close()
@@ -78,7 +78,7 @@ for i in range(20):
     f2 = open('ack_enc.txt','wb')
     f2.write(enc_data)
     f2.close()
-    print('file encrypted')
+    #print('file encrypted')
 
     #sending acknowledgement:
     f = open('ack_enc.txt','rb')
