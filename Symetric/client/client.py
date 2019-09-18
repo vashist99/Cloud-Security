@@ -22,7 +22,8 @@ def decrypt_file(key, data, iv):
 def main():
     # listening and accepting connection from client
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    HOST = "127.0.0.1"
+    HOST = '127.0.0.1' 
+    #"ec2-18-220-181-73.us-east-2.compute.amazonaws.com"
     PORT = 11113
     s.connect((HOST, PORT))
     print("connected to server")
@@ -30,11 +31,11 @@ def main():
     print("chose the file size to be transfered: 10kB 100kB 1MB 100MB ")
     sze = str(input())
     if(sze=="10kB"):
-        filename = "file_10kb"       
+        filename = "file_10kB"       
     elif sze=="100kB":
-        filename = "file_100kb"
+        filename = "file_100kB"
     elif sze=="1MB":
-        filename = "file_1Mb"
+        filename = "file_1MB"
     elif sze=="10MB":
         filename = "file_10MB"
 
@@ -44,18 +45,19 @@ def main():
         for i in range(num):
             start = time.time()
             temp = rint(1,59)
-            temp1 = str(temp).encode('utf-8')
+            temp1 = filename+str(temp)
+            temp2 = temp1.encode('utf-8')
             # sending id:
-            s.send(temp1)
+            s.send(temp2)
             # recieving encrypted file from client
             enc_data = s.recv(10000000)
 
             ptext = decrypt_file(key,enc_data,iv)
             #filename = 'file_10kb'
-            if temp<10:
-                in_filename = filename+"0"+str(temp)
-            else:
-                in_filename = filename+str(temp)
+            # if temp<10:
+            #     in_filename = filename+"0"+str(temp)
+            # else:
+            in_filename = filename+str(temp)
             f = open(in_filename,'wb')
             f.write(ptext)
             f.close()       

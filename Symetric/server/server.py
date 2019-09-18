@@ -35,14 +35,14 @@ def main():
             c, addr = s.accept()
             print("connected to client")
         if a1 != b'':
-            a = int(a1)
-            filename = "file_10kb"
+            a = a1.decode('utf-8')
+            in_filename = a 
             cur_path = os.path.dirname(__file__)
             #for i in range(len(a)):
-            if(int(a)<10):
-                in_filename = filename+"0"+str(int(a))
-            else:
-                in_filename = filename+str(int(a))
+            # if(int(a)<10):
+            #     in_filename = filename+"0"+str(int(a))
+            # else:
+            #     in_filename = filename+str(int(a))
     
             # encrypting file
             enc_data = encrypt_file(key,in_filename, iv)
