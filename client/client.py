@@ -27,10 +27,10 @@ pem = public_key.public_bytes(
 
 #connecting to server
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-HOST = '127.0.0.1'
-PORT = 56376
+HOST = '146.51.240.117.in-addr.arpa'
+PORT = 56375
 s.connect((HOST,PORT))
-print('connected to server')
+print('connected to server',HOST)
 
 for i in range(20):
     temp=0

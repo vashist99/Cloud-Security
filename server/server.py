@@ -23,16 +23,16 @@ pem = public_key.public_bytes(
 )
 
 
-HOST = ''
-PORT = 56376
-PORT1 = 12345
+HOST = '146.51.240.117.in-addr.arpa'
+PORT = 56375
+PORT1 = 8000
 
 #listening and accepting connection from client
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 s.bind((HOST,PORT))
 s.listen(5)
 c,addr = s.accept()
-print('connected to client')
+print('connected to client',HOST)
 
 #listening and accepting connection from client1:
 s1 = socket.socket(socket.AF_INET,socket.SOCK_STREAM)

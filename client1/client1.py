@@ -22,10 +22,10 @@ pem = public_key.public_bytes(
 
 #connecting to server:
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-HOST = '127.0.0.1'
-PORT = 12345
+HOST = '146.51.240.117.in-addr.arpa'
+PORT = 8080
 s.connect((HOST,PORT))
-print('connected to server')
+print('connected to server',HOST)
 
 for i in range(20):
     #sending key object to server:
