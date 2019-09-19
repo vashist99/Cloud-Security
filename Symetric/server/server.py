@@ -9,7 +9,7 @@ import math
 
 def encrypt_file(key, in_filename, iv):
     encryptor = AES.new(key, AES.MODE_CBC, iv)
-    with open(in_filename, "rb") as infile:
+    with open('data/' + in_filename, "rb") as infile:
         plaintext = infile.read()
         ciphertext = encryptor.encrypt(plaintext)
         return ciphertext
@@ -18,47 +18,32 @@ def encrypt_file(key, in_filename, iv):
 
 key = b'\x8a\x04Va{\x11\xfc\xdeW\x12\xbc/\xed\x10\x0f\x16\x14a\xadv\xc0\n\x889\xe4\x0c\xc82\x8f\xbe\x1cp'
 iv = b'Vs0\xb5\x0e\xfdr\x05\xf4\x84\x93\xe4\x95\x041\xa4'
+FILE_SIZE = '10kB'
 def main():
     # connecting to server
     HOST = '127.0.0.1'
-    PORT = 11113
+    PORT = 12345
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((HOST, PORT))
     s.listen(5)
-    c, addr = s.accept()
-    print("connected to client")
-   
-    
+    # c, addr = s.accept()
+    #print("connected to client")
     while True:
+        start = time.time()
+        c, addr = s.accept()
         a1 = c.recv(1024) # receiving request
-        if a1 == b'':
-            c, addr = s.accept()
-            print("connected to client")
-        if a1 != b'':
-            a = a1.decode('utf-8')
-            in_filename = a 
-            cur_path = os.path.dirname(__file__)
-            #for i in range(len(a)):
-            # if(int(a)<10):
-            #     in_filename = filename+"0"+str(int(a))
-            # else:
-            #     in_filename = filename+str(int(a))
-    
-            # encrypting file
+        a2 = a1.decode('utf-8')
+        for a in a2.split(','):
+            in_filename = 'file_'+FILE_SIZE + a
             enc_data = encrypt_file(key,in_filename, iv)
-            f2 = open("enc_file.txt", "wb")
-            f2.write(enc_data)
-            f2.close()
-            print("file encrypted")
+            c.send(enc_data)
+        end = time.time()
+        print(start)
+        print(end)
+        print(end - start)
+        c.close()
 
-            # sending file to server:
-            f2 = open("enc_file.txt", "rb")
-            c.sendfile(f2)
-            print("encrypted file sent")
-            f2.close()
-            #c.close()
-
-    print('done')   
+    #print('done')   
 
 if __name__ == "__main__":
     main()

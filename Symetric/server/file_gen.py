@@ -1,7 +1,7 @@
 
 import os
 
-file_name = 'file_10kB'
+file_name = 'data/file_10kB'
 one_kb = 1024  # size in bytes
 for i in range(60):
     # if i<10:

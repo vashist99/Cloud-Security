@@ -22,48 +22,44 @@ def decrypt_file(key, data, iv):
 def main():
     # listening and accepting connection from client
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    HOST = '127.0.0.1' 
+    HOST = '127.0.0.1'
     #"ec2-18-220-181-73.us-east-2.compute.amazonaws.com"
-    PORT = 11113
+    PORT = 12345
     s.connect((HOST, PORT))
     print("connected to server")
 
-    print("chose the file size to be transfered: 10kB 100kB 1MB 100MB ")
-    sze = str(input())
-    if(sze=="10kB"):
-        filename = "file_10kB"       
-    elif sze=="100kB":
-        filename = "file_100kB"
-    elif sze=="1MB":
-        filename = "file_1MB"
-    elif sze=="10MB":
-        filename = "file_10MB"
+    # print("chose the file size to be transfered: 10kB 100kB 1MB 100MB ")
+    # sze = str(input())
+    # if(sze=="10kB"):
+    #     filename = "file_10kB"       
+    # elif sze=="100kB":
+    #     filename = "file_100kB"
+    # elif sze=="1MB":
+    #     filename = "file_1MB"
+    # elif sze=="10MB":
+    #     filename = "file_10MB"
 
+    filename = 'file_10kB'
     num = int(input("Chose the number of files"))
-    sum=0
-    for j in range(20):
-        for i in range(num):
-            start = time.time()
-            temp = rint(1,59)
-            temp1 = filename+str(temp)
-            temp2 = temp1.encode('utf-8')
-            # sending id:
-            s.send(temp2)
-            # recieving encrypted file from client
-            enc_data = s.recv(10000000)
-
-            ptext = decrypt_file(key,enc_data,iv)
-            #filename = 'file_10kb'
-            # if temp<10:
-            #     in_filename = filename+"0"+str(temp)
-            # else:
-            in_filename = filename+str(temp)
-            f = open(in_filename,'wb')
-            f.write(ptext)
-            f.close()       
-        end_time = time.time()
-        sum+=(end_time-start)
-    print(sum/20)
+    ids = []
+    for i in range(num):
+        temp = rint(1,59)
+        ids.append(str(temp))
+    send_data = ','.join(ids)
+    send  = send_data.encode('utf-8')
+    start = time.time()
+    s.send(send)
+    # recieving encrypted file from client
+    for i in range(num):
+        enc_data = s.recv(1024)
+        ptext = decrypt_file(key,enc_data,iv)
+        in_filename = 'data/'+filename + str(i)
+        with open(in_filename, "wb") as infile:
+            infile.write(ptext) 
+    end_time = time.time()
+    print(start)
+    print(end_time)
+    print(end_time-start)
     #s.close()
 
 
