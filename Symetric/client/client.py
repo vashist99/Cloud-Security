@@ -11,8 +11,8 @@ iv = b'Vs0\xb5\x0e\xfdr\x05\xf4\x84\x93\xe4\x95\x041\xa4'
 decryptor = AES.new(key, AES.MODE_CBC, iv)
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-HOST = "127.0.0.1"
-PORT = 11113
+HOST = '127.0.0.1'#"ec2-18-220-181-73.us-east-2.compute.amazonaws.com"
+PORT = 8000
 
 FILE_NAME_BASE = 'file_1kb_'
 ONE_KB = 1024

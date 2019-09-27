@@ -13,7 +13,7 @@ encryptor = AES.new(key, AES.MODE_CBC, iv)
 FILE_NAME_BASE = "file_1kb_"
 
 HOST = '127.0.0.1'
-PORT = 11113
+PORT = 8000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
 s.listen(5)
@@ -24,7 +24,7 @@ while True:
 	ids = conn.recv(1024).decode("utf-8")
 	for id in ids.split(','):
 		with open('./Data/' + FILE_NAME_BASE + id, 'rb') as infile:
-			conn.sendfile(infile, 0)
+			conn.sendfile(infile)
 	end = time.time()
 	conn.close()
 	print(start)
