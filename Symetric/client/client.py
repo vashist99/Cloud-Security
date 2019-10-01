@@ -15,7 +15,7 @@ HOST = '127.0.0.1'#"ec2-18-220-181-73.us-east-2.compute.amazonaws.com"
 PORT = 8000
 
 FILE_NAME_BASE = 'file_1kb_'
-ONE_KB = 1024
+ONE_KB = 1024*1024
 FILE_SIZE = ONE_KB
 
 num = int(input("Chose the number of files: "))

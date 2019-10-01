@@ -12,9 +12,10 @@ key_c = b'[\xfb?\t\xd1#|\xdeQ\x17%\x96\xdat|\x8c'
 iv_c = b'\xe8O\x87&\x16\xdbf\xca\xfa\xa1\xf7\xe4\xc2\x0c\x18\xe2'
 
 
-HOST = '127.0.0.1'
-PORT = 8092
-PORT1 = 8006
+HOST = 'ec2-18-220-181-73.us-east-2.compute.amazonaws.com'
+HOST1 = '127.0.0.1'
+PORT = 1234
+PORT1 = 8080
 
 #listening and accepting connection from client
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -25,7 +26,7 @@ s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
 #listening and accepting connection from client1:
 s1 = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-s1.bind((HOST,PORT))
+s1.bind((HOST1,PORT))
 s1.listen(5)
 #c1,addr1 = s1.accept()
 

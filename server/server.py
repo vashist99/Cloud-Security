@@ -28,7 +28,7 @@ id = id.decode('utf-8')
 
 with open('./Data/file_1kb_'+'12','rb') as f:
     data = f.read()
-    enc_data = enc(data)
+    #enc_data = enc(data)
     #f2.write(enc_data)
     c.sendall(enc_data)
     #print('sent')
