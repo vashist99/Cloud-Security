@@ -4,6 +4,7 @@ from Crypto.PublicKey.RSA import RSAImplementation
 import time
 from Crypto.Cipher import AES
 import math
+import random
 
 
 key = b'\x8a\x04Va{\x11\xfc\xdeW\x12\xbc/\xed\x10\x0f\x16\x14a\xadv\xc0\n\x889\xe4\x0c\xc82\x8f\xbe\x1cp'
@@ -16,6 +17,12 @@ for i in range(60):
 	file = 'Data/' + file_name + (str(i))
 	#print(file)
 	with open(file, "wb") as f:
-		data = os.urandom(10*one_kb)
+		for i in range(one_kb):
+			f.write(str(random.randint(0,9)))
+	
+	with open(file,"r") as f:
+		data = f.read()
 		enc_data = encryptor.encrypt(data)
+	
+	with open(file,"wb") as f:
 		f.write(enc_data)

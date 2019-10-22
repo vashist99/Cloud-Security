@@ -10,6 +10,14 @@ key = b'[\xfb?\t\xd1#|\xdeQ\x17%\x96\xdat|\x8c'
 iv = b'\xe8O\x87&\x16\xdbf\xca\xfa\xa1\xf7\xe4\xc2\x0c\x18\xe2'
 
 
+def recv_basic(the_socket):
+    total_data=[]
+    while True:
+        data = the_socket.recv(8192)
+        if not data: break
+        total_data.append(data)
+    return b''.join(total_data)
+
 
 #connecting to server
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -37,7 +45,7 @@ s.sendall(enc(str(rint(0,60))))
 # with open('final.txt','wb') as f:
 #     f.write()
 
-d = s.recv(2048)
+d = recv_basic(s)
 d = dec(d)
 #print(d)
 with open('final.txt','wb') as po:

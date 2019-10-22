@@ -2,6 +2,13 @@ import socket
 from Crypto.Cipher import AES
 import time
 
+def recv_basic(the_socket):
+    total_data=[]
+    while True:
+        data = the_socket.recv(8192)
+        if not data: break
+        total_data.append(data)
+    return b''.join(total_data)
 
 #assigning shared key with server
 key_s = b'T\x91\x86\xe6\xa3\x19\xb4\x10~\xc3\xe9\xcf\t\xa3\xec\xd8'
@@ -12,10 +19,10 @@ key_c = b'[\xfb?\t\xd1#|\xdeQ\x17%\x96\xdat|\x8c'
 iv_c = b'\xe8O\x87&\x16\xdbf\xca\xfa\xa1\xf7\xe4\xc2\x0c\x18\xe2'
 
 
-HOST = '127.0.0.1'#'ec2-18-220-181-73.us-east-2.compute.amazonaws.com'
-HOST1 = '127.0.0.1'
-PORT = 8080
-PORT1 = 8010
+HOST = 'ec2-18-220-181-73.us-east-2.compute.amazonaws.com'
+HOST1 = '10.100.12.231'
+PORT = 8000
+PORT1 = 8025
 
 #listening and accepting connection from client
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -49,7 +56,8 @@ if cc is None:
     cc,addr = s1.accept()
 #print('ha')
 #encrypted id received:
-data = cc.recv(1024)
+data = cc.recv(5*1024*1024)
+
 id = dec_client(data)
 #id = id.decode('utf-8')
 #print(id)
@@ -58,14 +66,16 @@ id = dec_client(data)
 s.sendall(id)
 #print('sent')
 #receive file:
-data = s.recv(2048)
+data = recv_basic(s)
+#print(len(data))
 data = dec_server(data)
+#print(len(data))
 #print(data)
 #with open('file.txt','wb') as f:
     #f.write(enc(data))
 cc.send(enc(data))
 #print('hahahahahah')
-cc.close()
+# cc.close()
 s.close()
     
 
