@@ -30,3 +30,4 @@ for i in range(1):
 
 	with open(file,"wb") as f:
 		f.write(enc_data)
+		
