@@ -12,10 +12,10 @@ key_c = b'[\xfb?\t\xd1#|\xdeQ\x17%\x96\xdat|\x8c'
 iv_c = b'\xe8O\x87&\x16\xdbf\xca\xfa\xa1\xf7\xe4\xc2\x0c\x18\xe2'
 
 
-HOST = 'ec2-18-220-181-73.us-east-2.compute.amazonaws.com'
+HOST = '127.0.0.1'#'ec2-18-220-181-73.us-east-2.compute.amazonaws.com'
 HOST1 = '127.0.0.1'
-PORT = 1234
-PORT1 = 8080
+PORT = 8080
+PORT1 = 8010
 
 #listening and accepting connection from client
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -26,7 +26,7 @@ s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
 #listening and accepting connection from client1:
 s1 = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-s1.bind((HOST1,PORT))
+s1.bind((HOST1,PORT1))
 s1.listen(5)
 #c1,addr1 = s1.accept()
 
@@ -42,7 +42,7 @@ def dec_server(data):
 def enc(data):
     encryptor = AES.new(key_c,AES.MODE_CBC,iv_c)
     return encryptor.encrypt(data)
-s.connect((HOST,PORT1))
+s.connect((HOST,PORT))
 cc = None
 #while True:
 if cc is None:
@@ -51,7 +51,8 @@ if cc is None:
 #encrypted id received:
 data = cc.recv(1024)
 id = dec_client(data)
-#print('received')
+#id = id.decode('utf-8')
+#print(id)
 #send to server:
 
 s.sendall(id)

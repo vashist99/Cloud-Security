@@ -14,7 +14,7 @@ iv = b'\xe8O\x87&\x16\xdbf\xca\xfa\xa1\xf7\xe4\xc2\x0c\x18\xe2'
 #connecting to server
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 HOST = '127.0.0.1'
-PORT = 8006
+PORT = 8010
 #
 
 bs = AES.block_size

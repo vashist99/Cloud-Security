@@ -9,7 +9,7 @@ iv = b'A]L\x93\xb4\xae\xbc\xd7\xa0\xf4\xa9\xd7\xee2Y\x0c'
 #connecting to server:
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 HOST = '127.0.0.1'
-PORT = 8006
+PORT = 8080
 s.bind((HOST,PORT))
 s.listen(5)
 
@@ -30,7 +30,7 @@ with open('./Data/file_1kb_'+'12','rb') as f:
     data = f.read()
     #enc_data = enc(data)
     #f2.write(enc_data)
-    c.sendall(enc_data)
+    c.sendall(data)
     #print('sent')
     f.close()
 
